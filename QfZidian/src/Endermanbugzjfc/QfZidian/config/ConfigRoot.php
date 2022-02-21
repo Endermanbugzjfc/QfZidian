@@ -8,4 +8,6 @@ namespace Endermanbugzjfc\QfZidian\config;
 class ConfigRoot
 {
 
+    public bool $AutoUpdateDictionaryContent = false;
+
 }
