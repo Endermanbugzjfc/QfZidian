@@ -47,7 +47,7 @@ class QfZidian extends PluginBase
                     $this->getLogger()->info(
                         "Updating dictionary content... ($hasUpdates)"
                     );
-                    yield from $this->downloadUpdates();
+                    yield from $this->downloadUpdates($hasUpdates);
                 } else {
                     $this->getLogger()->debug(
                         "An auto update event has been cancelled ($hasUpdates)"
@@ -125,8 +125,32 @@ class QfZidian extends PluginBase
         return false; // Auto update disabled.
     }
 
-    protected function downloadUpdates() : Generator
+    protected function downloadUpdates(
+        AutoUpdateEvent $event
+    ) : Generator
     {
+        $downloadUpdates = new GetUrlTask(
+            $event->getUrl(),
+            $event->getUpdatedDictionaryContentDest(),
+            yield Await::RESOLVE
+        );
+        $this->getServer()->getAsyncPool()->submitTask($downloadUpdates);
+        $result = yield Await::ONCE;
+        if (is_string($result)) {
+            $this->getLogger()->error(
+                "Failed to download the dictionary content file: $result"
+            );
+        } elseif ($result === false) {
+            $this->getLogger()->error(
+                "Failed to override the existed dictionary content file"
+            );
+        } else {
+            $this->getLogger()->debug(
+                "Copied $result bytes"
+            );
+            return true;
+        }
+        return false;
     }
 
     protected static QfZidian $instance;
