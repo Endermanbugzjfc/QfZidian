@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Endermanbugzjfc\QfZidian\update;
 
 use pocketmine\scheduler\AsyncTask;
+use pocketmine\utils\Filesystem;
 use ZipArchive;
 use function file_exists;
 use function file_get_contents;
@@ -38,6 +39,7 @@ class ProcessDownloadedDataTask extends AsyncTask
                 or
                 !file_exists($dest)
             ) {
+                Filesystem::recursiveUnlink($dest);
                 $zip = new ZipArchive();
                 $ok = $zip->open(
                     $this->source
