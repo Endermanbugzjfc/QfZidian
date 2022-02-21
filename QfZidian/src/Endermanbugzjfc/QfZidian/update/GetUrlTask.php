@@ -8,6 +8,7 @@ namespace Endermanbugzjfc\QfZidian\update;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\utils\Filesystem;
 use pocketmine\utils\Internet;
+use pocketmine\utils\InternetRequestResult;
 use function dirname;
 use function file_put_contents;
 use function is_callable;
@@ -17,6 +18,11 @@ class GetUrlTask extends AsyncTask
 {
 
     /**
+     * Result types:
+     * {@link InternetRequestResult}: Responded.
+     * String: Internet exception message.
+     * Bool (false): Responded, failed to copy body to dest file.
+     * Int: Responded, the count of bytes copied from body to dest file. The {@link InternetRequestResult} is not returned for saving memory. Otherwise the body data will be duplicated.
      * @param string $url
      * @param string|null $dest Overrides existed file.
      * @param callable|null $callback
