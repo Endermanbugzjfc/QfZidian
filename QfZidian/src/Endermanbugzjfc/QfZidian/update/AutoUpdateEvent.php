@@ -15,7 +15,7 @@ class AutoUpdateEvent extends PluginEvent implements Cancellable
     use CancellableTrait;
 
     /**
-     * Cancelling this event will stop the plugin from downloading the file also from reloading dictionary content.
+     * Cancelling this event will stop the plugin from downloading the file and from updating the last Sha file, also from reloading dictionary content.
      * @param string $url URL to the updated dictionary content source file.
      * @param string|null $lastShaFile File to save the new Sha which will be used in the next auto update.
      * @param string|null $oldSha Will be displayed in log message.
