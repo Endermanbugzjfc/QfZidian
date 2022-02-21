@@ -6,6 +6,7 @@ namespace Endermanbugzjfc\QfZidian\update;
 
 use pocketmine\scheduler\AsyncTask;
 use ZipArchive;
+use function file_exists;
 use function file_get_contents;
 use function is_callable;
 use function serialize;
@@ -19,6 +20,7 @@ class ProcessDownloadedDataTask extends AsyncTask
     public function __construct(
         protected string $source,
         protected string $dest,
+        protected bool   $override,
         array            $readFiles,
         callable         $callback = null
     )
@@ -29,19 +31,26 @@ class ProcessDownloadedDataTask extends AsyncTask
 
     public function onRun() : void
     {
-        $zip = new ZipArchive();
-        $ok = $zip->open(
-            $this->source
-        );
         try {
-            if ($ok !== true) {
-                return;
-            }
-            $ok2 = $zip->extractTo(
-                $this->dest
-            );
-            if ($ok2 !== true) {
-                return;
+            $dest = $this->dest;
+            if (
+                $this->override
+                or
+                !file_exists($dest)
+            ) {
+                $zip = new ZipArchive();
+                $ok = $zip->open(
+                    $this->source
+                );
+                if ($ok !== true) {
+                    return;
+                }
+                $ok2 = $zip->extractTo(
+                    $dest
+                );
+                if ($ok2 !== true) {
+                    return;
+                }
             }
 
             $readFiles = unserialize($this->readFilesSerialized);
@@ -51,7 +60,7 @@ class ProcessDownloadedDataTask extends AsyncTask
             }
         } finally {
             $this->setResult([
-                $ok,
+                $ok ?? null,
                 $ok2 ?? null,
                 $fileResults ?? []
             ]);
