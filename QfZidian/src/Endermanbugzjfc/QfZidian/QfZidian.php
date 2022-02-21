@@ -15,4 +15,19 @@ class QfZidian extends PluginBase
 
     }
 
+    protected static QfZidian $instance;
+
+    protected function onLoad() : void
+    {
+        self::$instance = $this;
+    }
+
+    /**
+     * @return QfZidian
+     */
+    public static function getInstance() : QfZidian
+    {
+        return self::$instance;
+    }
+
 }
