@@ -9,7 +9,7 @@ use pocketmine\scheduler\AsyncTask;
 use pocketmine\utils\Internet;
 use function is_callable;
 
-class AutoUpdateTask extends AsyncTask
+class GetUrlTask extends AsyncTask
 {
 
     public function __construct(
