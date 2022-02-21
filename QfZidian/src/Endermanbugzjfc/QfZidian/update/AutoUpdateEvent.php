@@ -73,17 +73,17 @@ class AutoUpdateEvent extends PluginEvent implements Cancellable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLastShaFile() : string
+    public function getLastShaFile() : ?string
     {
         return $this->lastShaFile;
     }
 
     /**
-     * @param string $lastShaFile
+     * @param string|null $lastShaFile
      */
-    public function setLastShaFile(string $lastShaFile) : void
+    public function setLastShaFile(?string $lastShaFile) : void
     {
         $this->lastShaFile = $lastShaFile;
     }
