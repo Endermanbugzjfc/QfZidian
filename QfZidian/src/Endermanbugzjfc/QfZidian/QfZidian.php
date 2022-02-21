@@ -26,6 +26,32 @@ class QfZidian extends PluginBase
         $this->reload();
     }
 
+    /*
+     * I don't think this plugin would need to use database.
+     * Because the words list from qloog/sensitive_words is only 308.6 KB at total.
+     * (25.6 KB + 283 KB)
+     */
+    /**
+     * @var string[]
+     */
+    protected array $dictionary;
+
+    /**
+     * @return array
+     */
+    public function getDictionary() : array
+    {
+        return $this->dictionary;
+    }
+
+    /**
+     * @param array $dictionary
+     */
+    public function setDictionary(string ...$dictionary) : void
+    {
+        $this->dictionary = $dictionary;
+    }
+
     public function reload(
         ?callable $callback = null
     ) : void
