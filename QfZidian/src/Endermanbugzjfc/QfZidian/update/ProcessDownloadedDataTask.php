@@ -8,7 +8,7 @@ use pocketmine\scheduler\AsyncTask;
 use ZipArchive;
 use function is_callable;
 
-class ArchiveExtractTask extends AsyncTask
+class ProcessDownloadedDataTask extends AsyncTask
 {
 
     public function __construct(
