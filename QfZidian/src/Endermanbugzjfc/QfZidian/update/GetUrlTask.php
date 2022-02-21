@@ -14,7 +14,7 @@ class GetUrlTask extends AsyncTask
 
     public function __construct(
         protected string $url,
-        callable $callback = null
+        callable         $callback = null
     )
     {
         $this->storeLocal("callback", $callback);
@@ -22,7 +22,15 @@ class GetUrlTask extends AsyncTask
 
     public function onRun() : void
     {
-        $this->setResult(Internet::getURL($this->url));
+        $result = Internet::getURL(
+            $this->url,
+            10,
+            [],
+            $err
+        );
+        $this->setResult(
+            $result ?? $err
+        );
     }
 
     public function onCompletion() : void
