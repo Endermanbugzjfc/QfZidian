@@ -3,7 +3,8 @@
   "type": "plugin",
   "require": {
     "pocketmine/pocketmine-mp": "4.0.0",
-    "ext-zip": "*"
+    "ext-zip": "*",
+    "sof3/await-std": "dev-master"
   },
   "license": "MIT",
   "autoload": {
