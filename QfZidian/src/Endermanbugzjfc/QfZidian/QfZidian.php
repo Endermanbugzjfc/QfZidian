@@ -5,14 +5,93 @@ declare(strict_types=1);
 
 namespace Endermanbugzjfc\QfZidian;
 
+use Endermanbugzjfc\QfZidian\config\ConfigRoot;
+use Endermanbugzjfc\QfZidian\update\GetUrlTask;
+use Generator;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\InternetRequestResult;
+use SOFe\AwaitGenerator\Await;
+use function file_exists;
+use function file_get_contents;
+use function json_decode;
+use function urlencode;
 
 class QfZidian extends PluginBase
 {
 
     protected function onEnable() : void
     {
+        $this->reload();
+    }
 
+    public function reload(
+        ?callable $callback = null
+    ) : void
+    {
+        Await::f2c(function () : Generator {
+            $this->getLogger()->info("Reloading...");
+            $this->reloadConfigStruct();
+            $hasUpdates = yield from $this->fetchUpdates();
+        });
+    }
+
+    protected ConfigRoot $configStruct;
+
+    /**
+     * @return ConfigRoot
+     */
+    public function getConfigStruct() : ConfigRoot
+    {
+        return $this->configStruct;
+    }
+
+    protected function reloadConfigStruct() : void
+    {
+    }
+
+    protected function fetchUpdates() : Generator
+    {
+        $config = $this->getConfigStruct();
+        $repo = $config->getAutoUpdateRepo();
+        if ($repo !== "") {
+            $fetchUpdates = new GetUrlTask(
+                urlencode(
+                    "https://github.com/repos/$repo/commits?per_page=1"
+                ),
+                yield Await::RESOLVE
+            /*
+             * To anyone who is learning Await-Generator like me,
+             * you should add a callback argument for both success and failure. And use Await::REJECT.
+             * I'm not doing it here just because of laziness. :>
+             */
+            );
+            $this->getServer()->getAsyncPool()->submitTask($fetchUpdates);
+            $result = yield Await::ONCE;
+            if (!$result instanceof InternetRequestResult) {
+                return $result; // Error message string.
+            }
+            $code = $result->getCode();
+            if ($code !== 200) {
+                $resultArray = json_decode(
+                    $result->getBody(),
+                    true
+                );
+                $lastShaPath = $this->getDataFolder()
+                    . ".last_commit_sha.txt";
+                if (file_exists($lastShaPath)) {
+                    $lastSha = file_get_contents($lastShaPath);
+                    if ((
+                            $resultArray["sha"]
+                            ?? ""
+                        ) === $lastShaPath) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return "HTTP code $code";
+        }
+        return false; // Auto update disabled.
     }
 
     protected static QfZidian $instance;
