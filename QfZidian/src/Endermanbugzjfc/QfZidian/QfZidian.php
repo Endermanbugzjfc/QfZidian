@@ -14,6 +14,7 @@ use pocketmine\utils\InternetRequestResult;
 use SOFe\AwaitGenerator\Await;
 use function file_exists;
 use function file_get_contents;
+use function is_string;
 use function json_decode;
 use function urlencode;
 
@@ -29,10 +30,31 @@ class QfZidian extends PluginBase
         ?callable $callback = null
     ) : void
     {
-        Await::f2c(function () : Generator {
+        Await::f2c(function () use
+        (
+            $callback
+        ) : Generator {
             $this->getLogger()->info("Reloading...");
             $this->reloadConfigStruct();
             $hasUpdates = yield from $this->fetchUpdates();
+            if (is_string($hasUpdates)) {
+                $this->getLogger()->error(
+                    "Failed to fetch dictionary content updates: $hasUpdates"
+                );
+            } elseif ($hasUpdates instanceof AutoUpdateEvent) {
+                $hasUpdates->call();
+                if (!$hasUpdates->isCancelled()) {
+                    $this->getLogger()->info(
+                        "Updating dictionary content... ($hasUpdates)"
+                    );
+                    yield from $this->downloadUpdates();
+                } else {
+                    $this->getLogger()->debug(
+                        "An auto update event has been cancelled ($hasUpdates)"
+                    );
+                }
+            }
+            $callback();
         });
     }
 
@@ -98,6 +120,10 @@ class QfZidian extends PluginBase
             return "HTTP code $code";
         }
         return false; // Auto update disabled.
+    }
+
+    protected function downloadUpdates() : Generator
+    {
     }
 
     protected static QfZidian $instance;
