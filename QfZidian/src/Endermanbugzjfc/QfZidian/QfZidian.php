@@ -12,6 +12,7 @@ use Generator;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\InternetRequestResult;
 use SOFe\AwaitGenerator\Await;
+use function basename;
 use function file_exists;
 use function file_get_contents;
 use function is_string;
@@ -140,8 +141,10 @@ class QfZidian extends PluginBase
                         "https://github.com/$repo/$newSha"
                     ),
                     $lastShaFile,
-                    $this->getDataFolder()
-                    . "qloog-sensitive_words.zip", // Hard code file name
+                    $file = $this->getDataFolder()
+                        . "qloog-sensitive_words.zip",
+                    basename($file, ".zip"),
+                    // Hard code file name
                     $oldSha ?? null,
                     $newSha
                 );
@@ -157,7 +160,7 @@ class QfZidian extends PluginBase
     {
         $downloadUpdates = new GetUrlTask(
             $event->getUrl(),
-            $event->getUpdatedDictionaryContentDest(),
+            $event->getContentArchiveFile(),
             yield Await::RESOLVE
         );
         $this->getServer()->getAsyncPool()->submitTask($downloadUpdates);
