@@ -56,7 +56,7 @@ class QfZidian extends PluginBase
         if ($repo !== "") {
             $fetchUpdates = new GetUrlTask(
                 urlencode(
-                    "https://github.com/repos/$repo/commits?per_page=1"
+                    "https://api.github.com/repos/$repo/commits?per_page=1"
                 ),
                 yield Await::RESOLVE
             /*
