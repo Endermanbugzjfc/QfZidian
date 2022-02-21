@@ -143,7 +143,11 @@ class QfZidian extends PluginBase
                     $lastShaFile,
                     $file = $this->getDataFolder()
                         . "qloog-sensitive_words.zip",
-                    basename($file, ".zip"),
+                    $folder = basename($file, ".zip") . "/",
+                    [
+                        $folder . "baidu_filter.txt",
+                        $folder . "keywords"
+                    ],
                     // Hard code file name
                     $oldSha ?? null,
                     $newSha

@@ -21,6 +21,7 @@ class AutoUpdateEvent extends PluginEvent implements Cancellable, Stringable
      * @param string $newSha Will be displayed in log message.
      * @param string $contentArchiveFile Where the updated dictionary content data will be copied to.
      * @param string $contentFolder Where the data will be extracted to.
+     * @param array $readFiles The files to be loaded as dictionary data. The path still starts at working directory (if other plugins didn't change it).
      * @param string|null $lastShaFile File to save the new Sha which will be used in the next auto update.
      * @param string|null $oldSha Will be displayed in log message if is not null.
      */
@@ -29,11 +30,28 @@ class AutoUpdateEvent extends PluginEvent implements Cancellable, Stringable
         protected string  $newSha,
         protected string  $contentArchiveFile,
         protected string  $contentFolder,
+        protected array   $readFiles,
         protected ?string $lastShaFile = null,
         protected ?string $oldSha = null
     )
     {
         parent::__construct(QfZidian::getInstance());
+    }
+
+    /**
+     * @return array
+     */
+    public function getReadFiles() : array
+    {
+        return $this->readFiles;
+    }
+
+    /**
+     * @param array $readFiles
+     */
+    public function setReadFiles(string ...$readFiles) : void
+    {
+        $this->readFiles = $readFiles;
     }
 
     /**
