@@ -20,6 +20,7 @@ class AutoUpdateEvent extends PluginEvent implements Cancellable, Stringable
      * @param string $url URL to the updated dictionary content source file.
      * @param string $newSha Will be displayed in log message.
      * @param string $contentArchiveFile Where the updated dictionary content data will be copied to.
+     * @param string $contentFolder Where the data will be extracted to.
      * @param string|null $lastShaFile File to save the new Sha which will be used in the next auto update.
      * @param string|null $oldSha Will be displayed in log message if is not null.
      */
