@@ -1,0 +1,13 @@
+{
+  "name": "endermanbugzjfc/qfzidian",
+  "type": "plugin",
+  "require": {
+    "pocketmine/pocketmine-mp": "4.0.0"
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-0": {
+      "Endermanbugzjfc\\QfZidian\\": "QfZidian/src"
+    }
+  }
+}
