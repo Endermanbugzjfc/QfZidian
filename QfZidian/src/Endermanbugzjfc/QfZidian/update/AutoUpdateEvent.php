@@ -19,14 +19,15 @@ class AutoUpdateEvent extends PluginEvent implements Cancellable, Stringable
      * Cancelling this event will stop the plugin from downloading the file and from updating the last Sha file, also from reloading dictionary content.
      * @param string $url URL to the updated dictionary content source file.
      * @param string $newSha Will be displayed in log message.
-     * @param string $updatedDictionaryContentDest Where the updated dictionary content data will be copied to.
+     * @param string $contentArchiveFile Where the updated dictionary content data will be copied to.
      * @param string|null $lastShaFile File to save the new Sha which will be used in the next auto update.
      * @param string|null $oldSha Will be displayed in log message if is not null.
      */
     public function __construct(
         protected string  $url,
         protected string  $newSha,
-        protected string  $updatedDictionaryContentDest,
+        protected string  $contentArchiveFile,
+        protected string  $contentFolder,
         protected ?string $lastShaFile = null,
         protected ?string $oldSha = null
     )
@@ -37,17 +38,33 @@ class AutoUpdateEvent extends PluginEvent implements Cancellable, Stringable
     /**
      * @return string
      */
-    public function getUpdatedDictionaryContentDest() : string
+    public function getContentArchiveFile() : string
     {
-        return $this->updatedDictionaryContentDest;
+        return $this->contentArchiveFile;
     }
 
     /**
-     * @param string $updatedDictionaryContentDest
+     * @param string $contentArchiveFile
      */
-    public function setUpdatedDictionaryContentDest(string $updatedDictionaryContentDest) : void
+    public function setContentArchiveFile(string $contentArchiveFile) : void
     {
-        $this->updatedDictionaryContentDest = $updatedDictionaryContentDest;
+        $this->contentArchiveFile = $contentArchiveFile;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContentFolder() : string
+    {
+        return $this->contentFolder;
+    }
+
+    /**
+     * @param string $contentFolder
+     */
+    public function setContentFolder(string $contentFolder) : void
+    {
+        $this->contentFolder = $contentFolder;
     }
 
     /**
