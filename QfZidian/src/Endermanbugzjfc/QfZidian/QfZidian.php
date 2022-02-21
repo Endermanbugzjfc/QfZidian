@@ -81,6 +81,7 @@ class QfZidian extends PluginBase
                 urlencode(
                     "https://api.github.com/repos/$repo/commits?per_page=1"
                 ),
+                null,
                 yield Await::RESOLVE
             /*
              * To anyone who is learning Await-Generator like me,
