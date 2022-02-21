@@ -19,17 +19,35 @@ class AutoUpdateEvent extends PluginEvent implements Cancellable, Stringable
      * Cancelling this event will stop the plugin from downloading the file and from updating the last Sha file, also from reloading dictionary content.
      * @param string $url URL to the updated dictionary content source file.
      * @param string $newSha Will be displayed in log message.
+     * @param string $updatedDictionaryContentDest Where the updated dictionary content data will be copied to.
      * @param string|null $lastShaFile File to save the new Sha which will be used in the next auto update.
      * @param string|null $oldSha Will be displayed in log message if is not null.
      */
     public function __construct(
         protected string  $url,
         protected string  $newSha,
+        protected string  $updatedDictionaryContentDest,
         protected ?string $lastShaFile = null,
         protected ?string $oldSha = null
     )
     {
         parent::__construct(QfZidian::getInstance());
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdatedDictionaryContentDest() : string
+    {
+        return $this->updatedDictionaryContentDest;
+    }
+
+    /**
+     * @param string $updatedDictionaryContentDest
+     */
+    public function setUpdatedDictionaryContentDest(string $updatedDictionaryContentDest) : void
+    {
+        $this->updatedDictionaryContentDest = $updatedDictionaryContentDest;
     }
 
     /**
