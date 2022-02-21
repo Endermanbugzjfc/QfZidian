@@ -9,8 +9,9 @@ use Endermanbugzjfc\QfZidian\QfZidian;
 use pocketmine\event\Cancellable;
 use pocketmine\event\CancellableTrait;
 use pocketmine\event\plugin\PluginEvent;
+use Stringable;
 
-class AutoUpdateEvent extends PluginEvent implements Cancellable
+class AutoUpdateEvent extends PluginEvent implements Cancellable, Stringable
 {
     use CancellableTrait;
 
@@ -86,6 +87,21 @@ class AutoUpdateEvent extends PluginEvent implements Cancellable
     public function setLastShaFile(?string $lastShaFile) : void
     {
         $this->lastShaFile = $lastShaFile;
+    }
+
+    public function __toString() : string
+    {
+        $return = "";
+        if ($this->getOldSha() !== null) {
+            $return .= $this->getOldSha() . " ";
+        }
+        $return .= "=> " . $this->getNewSha() . " from " . $this->getUrl();
+        if ($this->getLastShaFile() !== null) {
+            $return .= ", the commit Sha will be saved to "
+                . $this->getLastShaFile();
+        }
+
+        return $return;
     }
 
 }
