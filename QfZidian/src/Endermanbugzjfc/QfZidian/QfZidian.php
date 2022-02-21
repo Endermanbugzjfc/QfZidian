@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace Endermanbugzjfc\QfZidian;
 
 use Endermanbugzjfc\QfZidian\config\ConfigRoot;
+use Endermanbugzjfc\QfZidian\update\AutoUpdateEvent;
 use Endermanbugzjfc\QfZidian\update\GetUrlTask;
 use Generator;
 use pocketmine\plugin\PluginBase;
@@ -76,18 +77,23 @@ class QfZidian extends PluginBase
                     $result->getBody(),
                     true
                 );
-                $lastShaPath = $this->getDataFolder()
+                $newSha = $resultArray["sha"] ?? "";
+                $lastShaFile = $this->getDataFolder()
                     . ".last_commit_sha.txt";
-                if (file_exists($lastShaPath)) {
-                    $lastSha = file_get_contents($lastShaPath);
-                    if ((
-                            $resultArray["sha"]
-                            ?? ""
-                        ) === $lastShaPath) {
+                if (file_exists($lastShaFile)) {
+                    $oldSha = file_get_contents($lastShaFile);
+                    if ($newSha === $lastShaFile) {
                         return false;
                     }
                 }
-                return true;
+                return new AutoUpdateEvent(
+                    urlencode(
+                        "https://github.com/$repo/$newSha"
+                    ),
+                    $lastShaFile,
+                    $oldSha ?? null,
+                    $newSha
+                );
             }
             return "HTTP code $code";
         }
