@@ -115,7 +115,7 @@ class QfZidian extends PluginBase
                     ),
                     $lastShaFile,
                     $this->getDataFolder()
-                    . "qloog-sensitive_words.zip",
+                    . "qloog-sensitive_words.zip", // Hard code file name
                     $oldSha ?? null,
                     $newSha
                 );
