@@ -8,6 +8,6 @@ namespace Endermanbugzjfc\QfZidian\config;
 class ConfigRoot
 {
 
-    public bool $AutoUpdateDictionaryContent = false;
+    public string $AutoUpdateRepo = "qloog/sensitive_words";
 
 }
